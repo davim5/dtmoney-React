@@ -1,122 +1,85 @@
-# Estrutura com create-react-app
+# Instalando Styled Components
 
-# O que é?
+- Uma das estratégias mais comuns de várias bibliotecas de FrontEnd
 
-- Estrutura pré-configurada de um projeto react
-    - Se preocupar somente com o código e menos com as configurações
+# CSS in JS
 
-# Criando Projeto
+- CSS no JavaScript
 
-- Comando
-    - nome projeto
-    - template → Normalmente instalaria com javascript, mas existem templates como o com **typescript.**
-        - Dá pra criar o próprio template também
+# Instalar Styled-Component
+
+- Biblioteca mais utilizada pra isso.
 
 ```bash
-yarn create react-app nomedoprojeto --template typescript
+yarn add styled-components
+yarn add @types/styled-components
 ```
 
-- Pode demorar um pouquinho na primeira vez
+# Estilização tradicional
 
-# Dicas
+- Cria arquivo css.
+- Coloca estilização.
+    - Estilizar propriedade
+- Importa arquivo a onde a estilização é usada.
 
-- Já vem com um README padrão, pode deletar ou alterar se quiser
-- Pode apagar alguns arquivos que não serão utilizados
-
-## Index.html
-
-- Deletar comentários
-- deixar do <meta> só o charset e name
-- mudar o título
-
-## Public
-
-- Deletar tudo da pasta public menos index.html
-
-## Src
-
-- Deletar
-    - Arquivos css
-    - Imagens
-    - Tests
-- Deixar só App, index e react-app-env
-
-### No index.tsx
-
-- Apagar
-    - importação do css
-    - importação do webvitals
-    - Tirar comentários
-
-### No App.tsx
-
-- Apagar
-    - Importação do react
-    - svg
-    - css
-- Deixar apenas div class name app.
-    - Colocar h1 hello world
-- Exportar App sem utilizar o **export default App;**
-
-# Por que utilizar exportações *export* e não *export default?*
-
-## Export Default
-
-```tsx
-function App() {
- return (
-		<div className="App">
-			<h1>Hello World</h1>
-		</div>
-	);
-}
-
-export default App;
-```
-
-- Quem define nome do componente não é quem está exportando o componente, mas quem está importando.
-    - **Exemplo:**
-        - Se outro arquivo, eu quiser mudar o nome da exportação para qualquer outro, eu posso.
-
-        **Posso importar com o nome que quiser**
-
-        ```tsx
-        // import App from './App'
-        import batata from './App'
-        ```
-
-## Export
-
-```tsx
-export function App() {
- return (
-		<div className="App">
-			<h1>Hello World</h1>
-		</div>
-	);
+```css
+.title {
+		font-size:64px;
+		color: #8227e6
 }
 ```
 
-- Quem está importando não consegue definir o nome.
-    - Ele daria erro
-- Tem que importar, obrigatoriamente, o App que está lá dentro.
-- Dá segurança maior para não esquecer de mudar o nome.
-- A exportação automática fica mais fácil e inteligente.
+- Colocar className="nomeDaPropriedade" na tag
 
 ```tsx
-// import App from './App'
-import { App }from './App'
+<div>
+	<h1 className="title"> Hello World</h1>
+</div>
 ```
 
-# Outras configurações
+# Estilização CSS in JS
 
-- Toda a configuração de webpack e babel não ficam no projeto, não conseguimos ver.
-    - Ficam dentro de um pacote instalado pelo create-react-app chama react-scripts.
+- Diferença: não vamos usar diretamente className's nos componentes.
+- Vamos criar componentes previamente estilizados.
+- Importar styled do styled-components.
 
-## Script Eject
+```tsx
+import styled from 'styled-components'
+```
 
-- Serve para mudar alguma configuração se necessário
-- **Não tem mais volta, se excutar.**
-- Traz todas as configurações para a raiz do projeto.
+- Se quiser fazer a mesma estilização passada.
+- Cria-se um componente.
+    - Cria como um constante
+    - Letra maúscula
+    - styled.tag
+    - Abrir aspas ``
+        - Dentro colocar a estilização.
 
-# Mudar dependências "desnecessárias" para devDependencies
+    ```tsx
+    const Title = styled.h1`
+    	font-size: 64px;
+    	color: #8257e6;
+    `
+    ```
+
+- Coloca o componente como tag.
+
+```tsx
+<div>
+	<Title> Hello World</Title>
+</div>
+```
+
+# Vantagens
+
+## Encadeamento
+
+- Pode estilizar os filhos com chaves.
+- Árvore
+
+## Escoped
+
+- Estilização fica dentro do Escopo do componente
+- Nunca vai poder ser compartilhada com outros componentes.
+- Diferente de uma classe, que pode ser usada em vários.
+- CSS sempre vai ficar muito próximo do componente em si
