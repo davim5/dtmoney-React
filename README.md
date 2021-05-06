@@ -1,46 +1,122 @@
-# Getting Started with Create React App
+# Estrutura com create-react-app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# O que é?
 
-## Available Scripts
+- Estrutura pré-configurada de um projeto react
+    - Se preocupar somente com o código e menos com as configurações
 
-In the project directory, you can run:
+# Criando Projeto
 
-### `yarn start`
+- Comando
+    - nome projeto
+    - template → Normalmente instalaria com javascript, mas existem templates como o com **typescript.**
+        - Dá pra criar o próprio template também
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+yarn create react-app nomedoprojeto --template typescript
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Pode demorar um pouquinho na primeira vez
 
-### `yarn test`
+# Dicas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Já vem com um README padrão, pode deletar ou alterar se quiser
+- Pode apagar alguns arquivos que não serão utilizados
 
-### `yarn build`
+## Index.html
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Deletar comentários
+- deixar do <meta> só o charset e name
+- mudar o título
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Public
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Deletar tudo da pasta public menos index.html
 
-### `yarn eject`
+## Src
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Deletar
+    - Arquivos css
+    - Imagens
+    - Tests
+- Deixar só App, index e react-app-env
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### No index.tsx
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Apagar
+    - importação do css
+    - importação do webvitals
+    - Tirar comentários
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### No App.tsx
 
-## Learn More
+- Apagar
+    - Importação do react
+    - svg
+    - css
+- Deixar apenas div class name app.
+    - Colocar h1 hello world
+- Exportar App sem utilizar o **export default App;**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Por que utilizar exportações *export* e não *export default?*
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Export Default
+
+```tsx
+function App() {
+ return (
+		<div className="App">
+			<h1>Hello World</h1>
+		</div>
+	);
+}
+
+export default App;
+```
+
+- Quem define nome do componente não é quem está exportando o componente, mas quem está importando.
+    - **Exemplo:**
+        - Se outro arquivo, eu quiser mudar o nome da exportação para qualquer outro, eu posso.
+
+        **Posso importar com o nome que quiser**
+
+        ```tsx
+        // import App from './App'
+        import batata from './App'
+        ```
+
+## Export
+
+```tsx
+export function App() {
+ return (
+		<div className="App">
+			<h1>Hello World</h1>
+		</div>
+	);
+}
+```
+
+- Quem está importando não consegue definir o nome.
+    - Ele daria erro
+- Tem que importar, obrigatoriamente, o App que está lá dentro.
+- Dá segurança maior para não esquecer de mudar o nome.
+- A exportação automática fica mais fácil e inteligente.
+
+```tsx
+// import App from './App'
+import { App }from './App'
+```
+
+# Outras configurações
+
+- Toda a configuração de webpack e babel não ficam no projeto, não conseguimos ver.
+    - Ficam dentro de um pacote instalado pelo create-react-app chama react-scripts.
+
+## Script Eject
+
+- Serve para mudar alguma configuração se necessário
+- **Não tem mais volta, se excutar.**
+- Traz todas as configurações para a raiz do projeto.
+
+# Mudar dependências "desnecessárias" para devDependencies
