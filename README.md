@@ -1,85 +1,104 @@
-# Instalando Styled Components
+# 02 - Criando Estilos Globais
 
-- Uma das estratégias mais comuns de várias bibliotecas de FrontEnd
+- Estilizações que não são de um só componente, mas de toda aplicação.
+    - Fonte
+    - Background
 
-# CSS in JS
+# Criando
 
-- CSS no JavaScript
+- No src
+- Criar pasta **styles**
+    - Dentro criar arquivo **global.ts**
+    - Importar createGlobalStyle de styled-components
 
-# Instalar Styled-Component
+## GlobalStyle
 
-- Biblioteca mais utilizada pra isso.
+- Criar variável GlobalStyle
+    - Com letra maiúscula, pois será convertido em um componente React
+- = createGlobalStyle
+- aspas ` `
+    - **Template Literals**
+        - Permite depois fazer novas variáveis dentro e executar funções ${}
 
-```bash
-yarn add styled-components
-yarn add @types/styled-components
+```tsx
+export const GlobalStyle = createGlobalStyle`
+	* {
+
+		}
+
+	body
+`;
 ```
 
-# Estilização tradicional
+### Utilizando variáveis do CSS para as cores da aplicação
 
-- Cria arquivo css.
-- Coloca estilização.
-    - Estilizar propriedade
-- Importa arquivo a onde a estilização é usada.
+- :root
 
-```css
-.title {
-		font-size:64px;
-		color: #8227e6
+```tsx
+:root {
+	--background: #f8f2f5
+}
+
+body {
+	background: var(--background);
 }
 ```
 
-- Colocar className="nomeDaPropriedade" na tag
+# Tamanho de fonte
+
+- Por padrão vem 16px.
+    - Tamanho ideal para desktop.
+- Na tag html
+    - quando o usuário estiver com uma tela até 1080px de largura.
+        - font-size: 93.75% (15px)
+    - quando o usuário estiver com uma tela até 720px de largura.
+        - font-size: 87.5% (14px)
+
+    ## Porque diminuir a fonte?
+
+    1. **Em dispositivos menores, faz sentido que seja menor.**
+    2. **Vamos usar uma medida REM.**
+        - 1 REM = tamanho do font-size da página
+        - Se font-size da página =16px → 1 REM = 16px
+    3. **Se estou dimuindo font-size conforme a tela fica menor.**
+        - Utilizando REM, toda aplicação vai se adaptar à tela do usuário.
+    4. **Caso o usuário esteja com configuração de aumentar ou diminuir fonte (em seu dispositivo).**
+        - O % vai aumentar e diminuir da acordo com a preferência do usuário.
 
 ```tsx
-<div>
-	<h1 className="title"> Hello World</h1>
-</div>
+html {
+	@media (max-width: 1080px){
+		font-size:93.75%;
+	}
+	@media (max-width: 720px){
+		font-size:87.5%;
+	}
+}
 ```
 
-# Estilização CSS in JS
+# Importar arquivo
 
-- Diferença: não vamos usar diretamente className's nos componentes.
-- Vamos criar componentes previamente estilizados.
-- Importar styled do styled-components.
+- Importar arquivo no App.tsx
+- Colocar dentro de um tag.
 
 ```tsx
-import styled from 'styled-components'
+import { GlobalStyle } from "./styles/global";
+
+export function App() {
+  return (
+    <div className="App">
+      <h1>Hello Mundo</h1>
+			<GlobalStyle />
+    </div>
+  );
+}
 ```
 
-- Se quiser fazer a mesma estilização passada.
-- Cria-se um componente.
-    - Cria como um constante
-    - Letra maúscula
-    - styled.tag
-    - Abrir aspas ``
-        - Dentro colocar a estilização.
-
-    ```tsx
-    const Title = styled.h1`
-    	font-size: 64px;
-    	color: #8257e6;
-    `
-    ```
-
-- Coloca o componente como tag.
+# Botão desabilitado
 
 ```tsx
-<div>
-	<Title> Hello World</Title>
-</div>
+[disabled] {
+	opacity: 0.6;
+	cursos: not-allowed;
+}
 ```
-
-# Vantagens
-
-## Encadeamento
-
-- Pode estilizar os filhos com chaves.
-- Árvore
-
-## Escoped
-
-- Estilização fica dentro do Escopo do componente
-- Nunca vai poder ser compartilhada com outros componentes.
-- Diferente de uma classe, que pode ser usada em vários.
-- CSS sempre vai ficar muito próximo do componente em si
