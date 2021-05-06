@@ -1,68 +1,58 @@
-# 04 - Component Header
+# 07 - Configurando MirageJS
 
-# Criando primeiro componente
-
-- No src
-- Criar pasta components
-    - Nela criar pasta Header.
-        - Criar arquivo index.tsx
-
-# Criando
-
-- Criar função Header
-    - Retornando componente qualquer.
-- Importar no App.tsx
-- Colocar junto com o GlobalStyle em um fragment
+- Quando estamos desenvolvendo uma aplicação como essa
+- É interessante deixar o frontend "conectado" como se houvesse um backend para imaginar como seriam as rotas.
 
 ```tsx
-<>
-	<Header/>
-	<GlobalStyle/>
-</>
+// TransactionsTable
+useEffect(()=> {
+	fetch('http://localhost:3000/api/transactions')
+	.then(response => reponse.json())
+	.then(data => console.log(data))
+},[]);
 ```
 
-# Estilizando
+# Instalar
 
-## 1. Começar criando estrutura
+```bash
+yarn add miragejs
+```
 
-- Estrutura antes do css.
-- Colocar todos os elementos em tela e depois ir estilizando eles.
-- **Logo**
-    - importar o arquivo da logo.
-        - Pode usar o import como qualquer outro arquivo.
-        - Dar um nome.
+# Importar Server
 
-        ```tsx
-        import logoImg from '../../assets/logo.svg';
+- No index.tsx
+    - Importar server ou createServer de miragejs
 
-        export function Header() {
-        	return (
-        		<header>
-        			<img src={logoImg} alt="dt money"/>
-        			<button type="button">
-        				Nova transação
-        			</button>
-        		</header>
-        	)
-        }
-        ```
+    ```tsx
+    import { createServer } from 'miragejs'
+    ```
 
-## 2. Utilizar Styled Components para Estilização.
+# Chamar função createServer
 
-- **Poderia fazer no mesmo arquivo do index.tsx , mas os estilos podem ficar muito grandes e o arquivo ficar muito cheio.**
-    - Por isso o componente foi criado como uma pasta.
-        - Assim dentro da pasta teremos:
-            - O index.tsx → Componente
-            - O styles.ts → Estilizações do componente
-
-### Hover no botão (com filter)
-
-- filtro no botão com css.
+- Definir
+    - routes → Quais as rotas que terei na api fictícia.
+        - namespace → Todas as chamadas vão ser partir desse endereço. Chamadas direcionadas ao miragejs.
+        - get→ Quando houver uma requisição tipo GET.
+            - Colocar rota e o que for deve ser devolvido.
 
 ```tsx
-transition: filter 0.2
+import { createServer } from 'miragejs'
 
-&:hover{
-	filter: brighteness(0.9);
-}
+createServer({
+  routes(){
+    this.namespace = 'api';
+    this.get('/transactions', () =>{
+      return [
+        {
+          id:1,
+          title:'Transaction 1',
+          amount: 400,
+          type: 'deposit',
+          category: 'food',
+          createdAt: new Date()
+        }
+      ]
+    })
+  }
+})
 ```

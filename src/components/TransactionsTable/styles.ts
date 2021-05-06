@@ -22,7 +22,8 @@ export const Container = styled.div`
             background: var(--shape);
             color: var(--text-body);
             border-radius: 0.25rem;
-
+ 
+            // Cada primeiro elemento da tabela
             &:first-child{
                 color: var(--text-title);
             }
