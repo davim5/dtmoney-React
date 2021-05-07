@@ -1,22 +1,44 @@
-# 10 - Componente: NewTransactionModal
+# 12 - Estilizando Modal
 
-- Pasta
-    - index.tsx
-    - styles.ts
-- Retornar o conteúdo que estava em <Modal>
-- Importar Modal
-    - Criar interface
-    - New transactionModalProps
-        - Receber isOpen:boolean e onRequestClose:()⇒void
+- Estilização geral do modal
 
-- Passar no App no lugar do Modal.
-    - Passar os parâmetros
+# Botão de fechar
 
-# Porque manter estado no App em vez de colocar no novo Componente?
+- importar o asset do ícone no componente
+- colocar dentro do modal
+    - Antes do Container.
+    - Button type=button
+        - img src={asset} alt="fechar modal"
+    - onclick={onRequestClose}
+    - className="react-modal-close"
 
-- A informação de abrir o modal.
+```tsx
+<button 
+  type="button" 
+  onClick={onRequestClose} 
+  className="react-modal-close"
+  >
+      <img src={closeImg} alt="Fechar Modal" />
+</button>
+```
 
-**Sempre que precisar que uma informação seja compartilhada entre mais de um componente**
+### Estilizar nos globais
 
-- R**epassar a informação para um componente que está por volta desses componentes**
-    - **Assim a informação pode ser acessada por eles.**
+- Provavelmente vai ter em todo modal.
+- position absolute.
+
+```tsx
+.react-modal-close{
+        position:absolute;
+        right:1.5rem;
+        top:1.5rem;
+        border:0;
+        background: transparent;
+
+        transition: filter .2s;
+
+        &:hover{
+            filter:brightness(0.8);
+        }
+    }
+```
