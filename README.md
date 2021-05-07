@@ -1,70 +1,73 @@
-# 16 - Tendo Acesso aos Dados do Input
+# 17 - Inserindo Transação na API
 
-- Tendo acesso ao valor digitado nos inputs para inserir a informação à API.
+- Pegar dados do formulário
+- Comunicar com API.
+- Colocar dados em variável **data.**
 
-# Função
+# Inserindo com MirageJS
 
-- handleCreateNewTransaction
-- Vai ser disparada através do submit no formulário
-    - Form vai ter um *onSubmit* chamando a função.
-- Toda vez que der enter no input, a função será executada.
-
-```tsx
-<Container
-onSubmit={handleCreateNewTransaction}
->
-...
-<Container/>
-```
-
-- No HTML, por padrão, todo formulário quando ´da submit, recarrega a tela
-
-    ## Prevenindo esse padrão do HTML
-
-    - Quando passamos a função no onSubmit.
-        - Recebe as informações
-        - Envia como parâmetro um *event.*
-            - Tipo React.FormEvent
-    - Dar um formato para o event.
-        - ReactForm
-- Dessa forma, teremos todos os dados desse evento.
-- event.PreventDefault( )
+- Método post
+- Rota transactions
+- Passando data
 
 ```tsx
-function handleCreateNewTransaction(event: FormEvent) {
-	event.PreventDefault( )
-}
+api.post('/transactions', data);
 ```
 
-- Agora não vai fechar.
+# Criar rota de POST
 
-# Tendo Acesso aos Dados do Input
+- Inseração de novas transactions
+- [this.post](http://this.post) ('/transactions')
+- Parâmetros
+    - schema
+        - Não vamos usar ainda
+    - request
+        - Dados que vamos enviar para a transaction
+        - Obtemos os dados através de request.requestBody
+            - Vão vir em forma de text
+            - Precisamos "Parsear" para formato JSON
 
-## Forma mais tradicional
+    ```tsx
+    this.post('/transactions',(schema,request)=>{
+          const data = JSON.parse(request.requestBody)
 
-- Anotar as formas dos inputs
-- Criar valor no state para cada input
+          return schema.create('transaction',data);
+        })
+    ```
+
+    - Agora podemos retornar os dados
+
+# Banco de Dados Interno do MirageJS
+
+- Queremos que as rotas estejam 'conectadas'.
+- Os dados passados no POST devem ser pegues na rota GET
+
+## Criando models
+
+- Declara o nome da primeira tabela
+    - Nome da entedidade → transactions
+    - Declarar que é do tipo Model
 
 ```tsx
-const [title, setTitle] = useState('');
-const [value, setValue] = useState(0);
-const [category, setCategory] = useState('');
+models:{
+    transaction: Model,
+  },
 ```
 
-- Em cada <input>
-    - Colocar propriedades
-        - Value={} → apontando para o estado
-        - onChange
-            - Executa toda vez que um novo texto for editado no input.
-            - devolve um evento
-            - setar o valor do estado com o novo valor digitado
+### Na rota POST
 
-        ```tsx
-        value={title}
-        onChange = (event) => setTitle(event.target.value)
-        ```
+- return schema.create → Banco de Dados
+    - Model que estou inserindo
+    - Dados que devem ser passados para o model
 
-    - No caso do input number precisa converter pra algo numérico
-        - pode ser colocando um '+' (gambiarra)
-        - colocando um Number()
-- Agora podemos cadastrar dados e armazenar na API.
+```tsx
+return schema.create('transactions', data)
+```
+
+### Na rota GET
+
+- Retornar todas as informações dentro do banco de dados
+
+```tsx
+return this.schema.all('transactions')
+```
