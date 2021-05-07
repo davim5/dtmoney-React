@@ -1,37 +1,70 @@
-# 15 - Cores dos Botões
+# 16 - Tendo Acesso aos Dados do Input
 
-- Cada botão tem uma cor quando selecionado.
-- Criar uma propriedade activeColor para a tag
+- Tendo acesso ao valor digitado nos inputs para inserir a informação à API.
+
+# Função
+
+- handleCreateNewTransaction
+- Vai ser disparada através do submit no formulário
+    - Form vai ter um *onSubmit* chamando a função.
+- Toda vez que der enter no input, a função será executada.
 
 ```tsx
-activeColor="green"
+<Container
+onSubmit={handleCreateNewTransaction}
+>
+...
+<Container/>
 ```
 
-## Adicionar a propriedade na intercace do RadioBox
+- No HTML, por padrão, todo formulário quando ´da submit, recarrega a tela
 
-- Colocar que aceita apenas as cores usadas na aplicação;
+    ## Prevenindo esse padrão do HTML
+
+    - Quando passamos a função no onSubmit.
+        - Recebe as informações
+        - Envia como parâmetro um *event.*
+            - Tipo React.FormEvent
+    - Dar um formato para o event.
+        - ReactForm
+- Dessa forma, teremos todos os dados desse evento.
+- event.PreventDefault( )
 
 ```tsx
-interface RadioBoxProps{
-    isActive:boolean;
-    activeColor: 'green' | 'red';
+function handleCreateNewTransaction(event: FormEvent) {
+	event.PreventDefault( )
 }
 ```
 
-## Criar constante com os valores das cores.
+- Agora não vai fechar.
+
+# Tendo Acesso aos Dados do Input
+
+## Forma mais tradicional
+
+- Anotar as formas dos inputs
+- Criar valor no state para cada input
 
 ```tsx
-	const colors = {
-    green: '#33cc95',
-    red: '#e52e40'
-}
+const [title, setTitle] = useState('');
+const [value, setValue] = useState(0);
+const [category, setCategory] = useState('');
 ```
 
-- Porque não usar variáveis css lá dentro?
-- Ao usar cores dentro do JS, ele não "enxerga" as variáveis CSS.
-- Usar o transparentize do polished para diminuir intensidade da cor.
+- Em cada <input>
+    - Colocar propriedades
+        - Value={} → apontando para o estado
+        - onChange
+            - Executa toda vez que um novo texto for editado no input.
+            - devolve um evento
+            - setar o valor do estado com o novo valor digitado
 
-```tsx
-background: ${(props)=> props.isActive 
-    ? [transparentize(0.9,colors[props.activeColor])] : 'transparent'};
-```
+        ```tsx
+        value={title}
+        onChange = (event) => setTitle(event.target.value)
+        ```
+
+    - No caso do input number precisa converter pra algo numérico
+        - pode ser colocando um '+' (gambiarra)
+        - colocando um Number()
+- Agora podemos cadastrar dados e armazenar na API.
