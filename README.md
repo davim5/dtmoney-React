@@ -1,73 +1,86 @@
-# 17 - Inserindo Transação na API
+# 18 - Listando transações e seeds
 
-- Pegar dados do formulário
-- Comunicar com API.
-- Colocar dados em variável **data.**
+- Buscar todas as transactions da API
+- Mostrar em tela
 
-# Inserindo com MirageJS
+# Deixando dados pré-cadastrados
 
-- Método post
-- Rota transactions
-- Passando data
+- Para não iniciar sozinho
+- Função seeds
+    - recebe propriedade server
+    - Executar server.db.loadData({})
+        - Passar nome da tabela (do Model no plural)
+        - Devolver as transactions
 
 ```tsx
-api.post('/transactions', data);
+transactions: [
+	{
+		id:1,
+		title:'',
+		type:'',
+		category:'',
+		amount: 0
+		createdAt: new Date()
+	},
+	{
+		id:2,
+		title:'',
+		type:'',
+		category:'',
+		amount: 0
+		createdAt: new Date()
+	},
+]
 ```
 
-# Criar rota de POST
+# Mostrar em tela
 
-- Inseração de novas transactions
-- [this.post](http://this.post) ('/transactions')
-- Parâmetros
-    - schema
-        - Não vamos usar ainda
-    - request
-        - Dados que vamos enviar para a transaction
-        - Obtemos os dados através de request.requestBody
-            - Vão vir em forma de text
-            - Precisamos "Parsear" para formato JSON
-
-    ```tsx
-    this.post('/transactions',(schema,request)=>{
-          const data = JSON.parse(request.requestBody)
-
-          return schema.create('transaction',data);
-        })
-    ```
-
-    - Agora podemos retornar os dados
-
-# Banco de Dados Interno do MirageJS
-
-- Queremos que as rotas estejam 'conectadas'.
-- Os dados passados no POST devem ser pegues na rota GET
-
-## Criando models
-
-- Declara o nome da primeira tabela
-    - Nome da entedidade → transactions
-    - Declarar que é do tipo Model
+- Criar um estado array.
+- setar os dados recebidos no array
+- response.data.transactions
 
 ```tsx
-models:{
-    transaction: Model,
-  },
+const [transactions, setTransactions] = useState<Transaction[]>([]);
 ```
 
-### Na rota POST
-
-- return schema.create → Banco de Dados
-    - Model que estou inserindo
-    - Dados que devem ser passados para o model
+- Listar um <tr> para cada transactions
 
 ```tsx
-return schema.create('transactions', data)
+<tbody>
+  {transactions.map(transaction =>{
+      return (
+          <tr key={transaction.id}>
+              <td>{transaction.title}</td>
+              <td className={transaction.type} >{transaction.amount}</td>
+              <td>{transaction.category}</td>
+              <td>{transaction.createdAt}</td>
+          </tr>
+      );
+  })}
+</tbody>
 ```
 
-### Na rota GET
+# Definir o Formato da Transaction
 
-- Retornar todas as informações dentro do banco de dados
+- Criar interface
 
 ```tsx
-return this.schema.all('transactions')
+interface Transaction {
+    id: number;
+    title: string;
+    amount: number;
+    type: string;
+    category: string;
+    createdAt: string;
+}
+```
+
+- Converter createdAt para data.
+
+## Repetindo
+
+- Lembrar da Key
+
+```tsx
+          <tr key={transaction.id}>
 ```
