@@ -1,69 +1,83 @@
-# 20 - Context API no React
+# 21 - Carregando Transações
 
-# Forma mais simples de criar Context
+- Carregar lista de transações dentro do contexto.
+- A informação que queremos está em um componente só.
+- Devemos repassar para o contexto.
 
-- Criar na pasta src
-    - arquivo TransactionsContext.ts
-- importar createContext de react
-- Criar várial const TransactionsContext = createContext();
+# **Uma forma**
 
-- CreateContext
-    - Passar qual o valor default.
-    - Iniciar como vetor vazio
+- Mover para o App.tsx, e passar no value do context.
 
 ```tsx
-import { createContext } from 'react';
-
-export const TransactionsContext = createContext([]);
+<TransactionsContext.Provider value={transactions}>
 ```
 
-- **Quando criamos contexto no react, conseguimos acessa-lo a partir de qualquer componente da aplicação.**
-    - **Para que esses componentes tenham acesso ao contexto, precisamos colocar um *Provider* por volta deles.**
+- Vai funcionar assim, mas não é muito bom.
+    - Se tivermos mais contextos, o código do App vai ficar muito e cheio e cada vez mais complexos.
 
-# Provider
+# Forma melhor
 
-- Criar por volta de todo o App.tsx
-    - Importar o TransactionsContext.ts
-    - Colocar TransactionsContext.Provider no fragment <>
-- O Provider obrigatoriamente precisa receber um *value.*
-    - Passar o valor atual do contexto
+- No TransactionsContext.ts
+- Exportar componente TransactionsProvider
+    - dentro dele, colocar o código função de GET das informações
+    - do estado das informações
+    - da interface
+- retornar
+    - <TransactionContext.Provider>
+        - Substituir o que estava no App, por esse que está sendo criado.
+        - Toda a logica do carregamento de dados vai estar dentro desse Provider específico.
+    - Colocar value={transactions}
+- Atualizar o tipo de informação do Contexto
+    - Lista de transaction
 
 ```tsx
-<TransactionsContext.Provider value={[]}>
+export function TransactionsProvider({children}:TransactionProviderProps){
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+    useEffect(()=>{
+        api.get('/transactions')
+        .then(response => setTransactions(response.data.transactions))
+    },[]);
+
+    return(
+        <TransactionsContext.Provider value={transactions}>
+            {children}
+        </TransactionsContext.Provider>
+    );
+}
 ```
 
-# Consumir o contexto na aplicação
+# No App
 
-- Agora qualquer componente do App vai poder consumir o conteúdo do contexto.
-    - Têm acesso às informações.
-
-## Como obter os valores?
-
-### Forma antiga
-
-- API do react → renderProps
-    - Cria um componente TransactionContext.Consumer>
-    - Em vez da passar um componente como filho do consumer, se passa um função.
-        - Esta, vai receber os dados do contexto.
+- Trocar o Transaction.Provider pelo que foi criado
 
 ```tsx
-<TransactionContext.Consumer>
-{(data) => {
-	console.log(data)
-	return <p> ok </p>
-}}
-</TransactionContext.Consumer>
+<TransactionsProvider>
+      <Header onOpenNewTransactionModal={handleOpenNewTransactionModal}/>
+
+      <Dashboard/>
+
+      <NewTransactionModal
+        isOpen={isNewTransactionModalOpen}
+        onRequestClose={handleCloseNewTransactionModal}
+      />
+      
+      <GlobalStyle/>
+</TransactionsProvider>
 ```
 
-## Forma Nova
+# Children
 
-- Pós React Hooks
-- Mais simples.
-- Cria variável data
-- useContext passando nome do contexto
+- Falar que o componente recebe children dentro dele
+- Criar interface TransactionProviderProps
+- children: ReactNode
+    - importar ReactNode de 'react'
+    - Aceita qualquer tipo de conteúdo válido para React.
 
 ```tsx
-const data = useContext(TransactionsContext);
+interface TransactionProviderProps {
+    children:ReactNode;
+}
 ```
 
-- **Sempre que a informação do contexto mudar, os dois componentes vão renderizar novamente mostrando as atualizações.**
+- Pegar o children das props e passar no retorno
