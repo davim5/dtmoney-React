@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { TransactionsContext } from '../../TransactionsContext';
 
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 
 import { Container, TransactionTypeContainer, RadioBox } from './styles';
+import { useTransactions } from '../../hooks/useTransactionsContext';
 
 interface NewTransactionModelProps{
     isOpen:boolean;
@@ -14,7 +14,7 @@ interface NewTransactionModelProps{
 }
 
 export function NewTransactionModal({ isOpen,onRequestClose }:NewTransactionModelProps){
-    const { createTransaction } = useContext(TransactionsContext)
+    const { createTransaction } = useTransactions();
     // Armazenar qual botão o usuário clicou
     const [type,setType] = useState('deposit');
     const [title,setTitle] = useState('');

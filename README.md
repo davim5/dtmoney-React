@@ -1,66 +1,28 @@
-# 24 - Calculando Resumo
+# 25 - Criando Hook
 
-# Reduce
+# Por que?
 
-## Forma com várias variáveis.
+- Toda vez que precisamos usar o TransactionsContext em qualquer lugar da aplicação.
+- Preciso importar tanto o useContext quanto o TransactionsContext
+- Vamos reduzir isso em uma unica importação.
 
-- Criar variável.
-- Fazer um reduce das variáveis.
-    - Percorre transactions
-        - acc → acumulador
-        - transaction.
-    - Se depósito, somar no acumulador
-    - retorna acumulador
-    - iniciar com valor 0
+# Como?
 
-```tsx
-const totalDeposits = transactions.reduce((acc, transaction) => {
-	if(transaction.type === 'deposit') {
-		return acc + transaction.amount;
-	}
+- Criar uma pasta **hooks** no src.
+- Renomear o TransactionsContext para useTransactionsContext.
+    - Pois será um hook.
+    - **Todo hook começa o nome com "use"**
+- Colocar o useTransactionsContext na pasta hooks.
 
-	return acc;
-},0);
-```
-
-## Forma com uma variável só
-
-- Criar variável summary
-- Fazer um reduce das variáveis.
-    - Percorre transactions
-        - acc → acumulador
-        - transaction.
-    - iniciar os três valores com 0 com:
-        - deposits: 0
-        - withdraw: 0
-        - total: 0
-- Na função
+- exportar uma função useTransactions
+- **Um hook no React sempre pode se utilizar de outros hooks.**
 
 ```tsx
-const summary = transactions.reduce((acc,transaction)=>{
-        if(transaction.type === 'deposit') {
-            acc.deposits += transaction.amount;
-            acc.total += transaction.amount;
-        } else {
-            acc.withdraws += transaction.amount;
-            acc.total -= transaction.amount;
-        }
+export function useTransactions() {
+    const context = useContext(TransactionsContext);
 
-        return acc;
-    },{
-        deposits:0,
-        withdraws:0,
-        total:0,
-    })
+    return context; 
+}
 ```
 
-# Formatando Respostas
-
-```tsx
-<strong>
-    {new Intl.NumberFormat('pt-BR',{
-        style: 'currency',
-        currency: 'BRL'
-    }).format(summary.deposits)}
-</strong>
-```
+- Trocar em todos os locais que usavam useContext por useTransactions
