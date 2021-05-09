@@ -1,100 +1,66 @@
-# 23 - Finalizando Inserção
+# 24 - Calculando Resumo
 
-Precisamos:
+# Reduce
 
-- Ao inserir nova transação
-    - Fechar modal.
-    - Carregar na transação na lista.
+## Forma com várias variáveis.
 
-# 1. Fechar Modal
-
-- Chamar onRequestClose após criar.
-- Só chamar se a transação der certo
-    - Ela precisa aguardar a transação acontecer
-    - Usando **await (Função assíncrona)**
-
-    ```tsx
-    async function handleCreateNewTransaction(event:React.FormEvent){
-      event.preventDefault();
-
-      await createTransaction({
-          title,
-          amount,
-          category,
-          type,
-      })
-
-      setTitle('');
-      setAmount(0);
-      setCategory('');
-      setType('depoist');
-      onRequestClose();
-    }
-    ```
-
-- Transformar a createTransactions em função assíncrona
-
-    ```tsx
-    async function createTransaction(transactionInput:TransactionInput){   
-      api.post('/transactions',transactionInput);
-    }
-    ```
-
-- Ajustar o formato a função (Interface)
-    - Toda função assíncrona retorna uma *promise*
-
-    ```tsx
-    interface TransactionContextData{
-    	transactions: Transaction[]; //Array de Transactions
-    	createTransaction: (transaction:TransactionInput) => Promise<void>;
-    }
-    ```
-
-## Resetar os valores do Modal
+- Criar variável.
+- Fazer um reduce das variáveis.
+    - Percorre transactions
+        - acc → acumulador
+        - transaction.
+    - Se depósito, somar no acumulador
+    - retorna acumulador
+    - iniciar com valor 0
 
 ```tsx
-	setTitle('');
-  setAmount(0);
-  setCategory('');
-  setType('depoist');
-  onRequestClose();
+const totalDeposits = transactions.reduce((acc, transaction) => {
+	if(transaction.type === 'deposit') {
+		return acc + transaction.amount;
+	}
+
+	return acc;
+},0);
 ```
 
-# 2. Mostrar novo Item
+## Forma com uma variável só
 
-- Quando o Mirage faz a inserção na api, a api nos retorna o os dados inseridos.
-- Na resposta da inserção, temos acesso ao dado que foi inserido.
-- Na função de createTransaction
-- Acessar a response da inserção
-    - Colocar dentro do state de transactions
+- Criar variável summary
+- Fazer um reduce das variáveis.
+    - Percorre transactions
+        - acc → acumulador
+        - transaction.
+    - iniciar os três valores com 0 com:
+        - deposits: 0
+        - withdraw: 0
+        - total: 0
+- Na função
 
 ```tsx
-async function createTransaction(transactionInput:TransactionInput){   
-  const response = await api.post('/transactions',transactionInput);
-  const { transaction } = response.data;
-  
-  setTransactions([
-      ...transactions,
-      transaction,
-  ])
-}
+const summary = transactions.reduce((acc,transaction)=>{
+        if(transaction.type === 'deposit') {
+            acc.deposits += transaction.amount;
+            acc.total += transaction.amount;
+        } else {
+            acc.withdraws += transaction.amount;
+            acc.total -= transaction.amount;
+        }
+
+        return acc;
+    },{
+        deposits:0,
+        withdraws:0,
+        total:0,
+    })
 ```
 
-- O createdAt não estava inclusivo no input da transaction, mas está na tabela.
-- Vamos criar a Date na hora de incluir no Estado das transactions.
+# Formatando Respostas
 
 ```tsx
-async function createTransaction(transactionInput:TransactionInput){   
-        const response = await api.post('/transactions',{
-            ...transactionInput, // ... -> Pegar todos os dados 
-            createdAt: new Date(),
-        });
-        const { transaction } = response.data;
-        
-        setTransactions([
-            ...transactions,
-            transaction,
-        ])
-        
-    }
+<strong>
+    {new Intl.NumberFormat('pt-BR',{
+        style: 'currency',
+        currency: 'BRL'
+    }).format(summary.deposits)}
+</strong>
 ```
