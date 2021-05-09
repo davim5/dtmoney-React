@@ -21,15 +21,21 @@ export function NewTransactionModal({ isOpen,onRequestClose }:NewTransactionMode
     const [amount,setAmount] = useState(0);
     const [category,setCategory] = useState('');
 
-    function handleCreateNewTransaction(event:React.FormEvent){
+    async function handleCreateNewTransaction(event:React.FormEvent){
         event.preventDefault();
 
-        createTransaction({
+        await createTransaction({
             title,
             amount,
             category,
             type,
         })
+
+        onRequestClose();
+        setTitle('');
+        setAmount(0);
+        setCategory('');
+        setType('depoist');
     }
 
     return(
