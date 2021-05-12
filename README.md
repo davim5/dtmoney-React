@@ -22,7 +22,7 @@ Dt Money
 
 ### 2. Acesse a pasta do projeto!
 
-  ```cd GoFinances```
+  ```cd dtmoney-react```
 
 ### 3. Instale as dependências!
 
