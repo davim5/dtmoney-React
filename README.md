@@ -1,28 +1,45 @@
-# 25 - Criando Hook
+<h1 align="center">
+Dt Money
+</h1>
+<h2 align="center">Aplicação de controle de finanças.</h2>
 
-# Por que?
+<img src="images/react-dt-2.gif" style="width:500px">
 
-- Toda vez que precisamos usar o TransactionsContext em qualquer lugar da aplicação.
-- Preciso importar tanto o useContext quanto o TransactionsContext
-- Vamos reduzir isso em uma unica importação.
+---
+## ⚡ Tecnologias Utilizadas
 
-# Como?
+- ReactJS + hooks
+- Typescript
+- SASS + Styled Components
+- MirageJS + Axios
 
-- Criar uma pasta **hooks** no src.
-- Renomear o TransactionsContext para useTransactionsContext.
-    - Pois será um hook.
-    - **Todo hook começa o nome com "use"**
-- Colocar o useTransactionsContext na pasta hooks.
+---
+## 🚀 Começando!
 
-- exportar uma função useTransactions
-- **Um hook no React sempre pode se utilizar de outros hooks.**
+### 1. Clone!
 
-```tsx
-export function useTransactions() {
-    const context = useContext(TransactionsContext);
+  ```git clone https://github.com/davim5/dtmoney-react.git```
 
-    return context; 
-}
-```
+### 2. Acesse a pasta do projeto!
 
-- Trocar em todos os locais que usavam useContext por useTransactions
+  ```cd GoFinances```
+
+### 3. Instale as dependências!
+
+  ```yarn```
+
+### 4. Rode!
+
+  ```yarn start```
+
+### 5. Aproveite!
+---
+## 📌 Contato
+Me encontre em uma dessas redes!
+
+[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/davilima5/)](https://www.linkedin.com/in/davilima5/)
+[![Github Badge](https://img.shields.io/badge/-Github-000?style=flat-square&logo=Github&logoColor=white&link=https://github.com/davim5)](https://github.com/davim5)
+
+Made with ♥ Enjoy it!
+
+
